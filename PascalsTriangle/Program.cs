@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 
 namespace PascalsTriangle
 {
@@ -16,30 +17,22 @@ namespace PascalsTriangle
             }
 
             lines = CheckForValidNumberOfLines(lines, 1, 61);
+            var sb = new StringBuilder();
 
             for (int n = 0; n < lines; n++)
             {
                 long val = 0;
-                string output = "";
+                sb.Clear();
                 for (int k = 0; k <= n; k++)
                 {
+                    val = k == 0 ? 1 : val * (n + 1 - k) / k;
 
-                    if (k == 0 || n == 0)
-                    {
-                        val = 1;
-                    }
-                    else
-                    {
-                        val = val * (n + 1 - k) / k;
-
-                    }
-
-                    output += $" {val} ";
+                    sb.Append($" {val} ");
                 }
 
+                var output = sb.ToString().Trim();
                 try
                 {
-                    output = output.Trim();
                     Console.SetCursorPosition((Console.WindowWidth - output.Length) / 2, Console.CursorTop);
                 }
                 catch (Exception)
