@@ -21,8 +21,8 @@ namespace PascalsTriangle
 
             for (int n = 0; n < lines; n++)
             {
-                long val = 0;
                 sb.Clear();
+                long val = 0;
                 for (int k = 0; k <= n; k++)
                 {
                     val = k == 0 ? 1 : val * (n + 1 - k) / k;
@@ -31,24 +31,30 @@ namespace PascalsTriangle
                 }
 
                 var output = sb.ToString().Trim();
-                try
-                {
-                    Console.SetCursorPosition((Console.WindowWidth - output.Length) / 2, Console.CursorTop);
-                }
-                catch (Exception)
-                {
-                    Debug.WriteLine("Output length is greater than WindowWidth.");
-                    
-                    var lastOutputLength = Int32.MaxValue;
-                    while (lastOutputLength > output.Length && Console.WindowWidth < output.Length)
-                    {
-                        lastOutputLength = output.Length;
-                        output = output.Replace("  ", " ");
-                    }
-                }
+                output = TryToCentreOutputOnScreen(output);
 
                 Console.WriteLine(output);
             }
+        }
+
+        private static string TryToCentreOutputOnScreen(string output)
+        {
+            try
+            {
+                Console.SetCursorPosition((Console.WindowWidth - output.Length) / 2, Console.CursorTop);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Debug.WriteLine("Output length is greater than WindowWidth.");
+
+                if (output.Contains("  "))
+                {
+                    output = output.Replace("  ", " ");
+                    TryToCentreOutputOnScreen(output);
+                }
+            }
+
+            return output;
         }
 
         private static int CheckForValidNumberOfLines(int lines, int min, int max)
